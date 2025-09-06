@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-danger {
+            background: rgba(220, 53, 69, 0.8);
+            color: white;
+            border: 1px solid rgba(220, 53, 69, 0.9);
+        }
+
+        .btn-danger:hover {
+            background: rgba(220, 53, 69, 1);
+            transform: translateY(-2px);
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .user-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .user-info h3 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        .user-info p {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 1rem;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .user-actions .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>👤 User Dashboard</h1>
+        <div class="nav-links">
+            <a href="/" class="nav-link">🏠 Home</a>
+            <a href="/admin/" class="nav-link">⚙️ Admin</a>
+            <a href="/user/api/" class="nav-link">🔗 API</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>User Management</h1>
+            <p>Manage users, profiles, and permissions with ease</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-users">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="active-users">0</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="new-users">0</div>
+                <div class="stat-label">New This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="admin-users">0</div>
+                <div class="stat-label">Admin Users</div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="#" class="btn btn-primary" onclick="showCreateUserModal()">
+                ➕ Create New User
+            </a>
+            <a href="/user/api/users/" class="btn btn-secondary">
+                📊 View API Data
+            </a>
+            <a href="#" class="btn btn-secondary" onclick="exportUsers()">
+                📁 Export Users
+            </a>
+        </div>
+
+        <div class="search-section">
+            <input type="text" class="search-input" placeholder="🔍 Search users by name, email, or username..." id="searchInput">
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterUsers('all')">All Users</button>
+                <button class="filter-btn" onclick="filterUsers('active')">Active</button>
+                <button class="filter-btn" onclick="filterUsers('inactive')">Inactive</button>
+                <button class="filter-btn" onclick="filterUsers('admin')">Admins</button>
+                <button class="filter-btn" onclick="filterUsers('recent')">Recent</button>
+            </div>
+        </div>
+
+        <div class="users-grid" id="usersGrid">
+            <!-- Users will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        let users = [];
+        let filteredUsers = [];
+        let currentUser = {
+            is_staff: {{ request.user.is_staff|yesno:"true,false" }},
+            is_superuser: {{ request.user.is_superuser|yesno:"true,false" }},
+            id: {{ request.user.id }}
+        };
+
+        // Load users from API
+        async function loadUsers() {
+            try {
+                const response = await fetch('/user/api/users/');
+                users = await response.json();
+                filteredUsers = users;
+                updateStats();
+                renderUsers();
+            } catch (error) {
+                console.error('Error loading users:', error);
+                // Fallback demo data
+                users = [
+                    {
+                        id: 1,
+                        username: 'admin',
+                        email: 'admin@example.com',
+                        first_name: 'Admin',
+                        last_name: 'User',
+                        is_active: true,
+                        date_joined: '2024-01-01'
+                    },
+                    {
+                        id: 2,
+                        username: 'john_doe',
+                        email: 'john@example.com',
+                        first_name: 'John',
+                        last_name: 'Doe',
+                        is_active: true,
+                        date_joined: '2024-02-15'
+                    }
+                ];
+                filteredUsers = users;
+                updateStats();
+                renderUsers();
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('total-users').textContent = users.length;
+            document.getElementById('active-users').textContent = users.filter(u => u.is_active).length;
+            document.getElementById('new-users').textContent = users.filter(u => {
+                const joinDate = new Date(u.date_joined);
+                const oneMonthAgo = new Date();
+                oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+                return joinDate > oneMonthAgo;
+            }).length;
+            document.getElementById('admin-users').textContent = users.filter(u => u.username.includes('admin')).length;
+        }
+
+        function renderUsers() {
+            const grid = document.getElementById('usersGrid');
+            
+            if (filteredUsers.length === 0) {
+                grid.innerHTML = '<div style="text-align: center; color: white; grid-column: 1/-1;">No users found</div>';
+                return;
+            }
+
+            grid.innerHTML = filteredUsers.map(user => `
+                <div class="user-card">
+                    <div class="user-avatar">
+                        ${user.first_name ? user.first_name.charAt(0) : user.username.charAt(0)}
+                    </div>
+                    <div class="user-info">
+                        <h3>${user.first_name} ${user.last_name}</h3>
+                        <p>@${user.username}</p>
+                        <p>${user.email}</p>
+                        <p style="font-size: 0.8rem; color: ${user.is_active ? '#22543d' : '#c53030'};">
+                            ${user.is_active ? '🟢 Active' : '🔴 Inactive'}
+                        </p>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-primary" onclick="editUser(${user.id})">Edit</button>
+                        <button class="btn btn-secondary" onclick="viewUser(${user.id})">View</button>
+                        ${currentUser.is_staff ? `<button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterUsers(type) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            switch(type) {
+                case 'active':
+                    filteredUsers = users.filter(u => u.is_active);
+                    break;
+                case 'inactive':
+                    filteredUsers = users.filter(u => !u.is_active);
+                    break;
+                case 'admin':
+                    filteredUsers = users.filter(u => u.username.includes('admin'));
+                    break;
+                case 'recent':
+                    const oneWeekAgo = new Date();
+                    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                    filteredUsers = users.filter(u => new Date(u.date_joined) > oneWeekAgo);
+                    break;
+                default:
+                    filteredUsers = users;
+            }
+            renderUsers();
+        }
+
+        function searchUsers() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            filteredUsers = users.filter(user => 
+                user.username.toLowerCase().includes(query) ||
+                user.email.toLowerCase().includes(query) ||
+                `${user.first_name} ${user.last_name}`.toLowerCase().includes(query)
+            );
+            renderUsers();
+        }
+
+        function editUser(id) {
+            alert(`Edit user ${id} - This would open an edit modal in a real application`);
+        }
+
+        function viewUser(id) {
+            window.location.href = `/user/profile/${id}/`;
+        }
+
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                window.location.href = `/user/delete/${id}/`;
+            }
+        }
+
+        function showCreateUserModal() {
+            alert('Create new user - This would open a create user form');
+        }
+
+        function exportUsers() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(users, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "users.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', searchUsers);
+
+        // Load users on page load
+        document.addEventListener('DOMContentLoaded', loadUsers);
+
+        // Animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.user-card, .stat-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

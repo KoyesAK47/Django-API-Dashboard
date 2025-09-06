@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete User Confirmation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .confirmation-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .warning-header {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .warning-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .warning-title {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .warning-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #ef4444;
+        }
+
+        .user-info h3 {
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-details {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .warning-message {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            color: #b91c1c;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .warning-message strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #991b1b;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 600px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/user/profile/{{ user_to_delete.id }}/" class="back-btn">← Back to Profile</a>
+        
+        <div class="confirmation-card">
+            <div class="warning-header">
+                <div class="warning-icon">⚠️</div>
+                <h1 class="warning-title">Delete User Account</h1>
+                <p class="warning-subtitle">This action cannot be undone</p>
+            </div>
+            
+            <div class="content">
+                <div class="user-info">
+                    <h3>User to be deleted:</h3>
+                    <div class="user-details">
+                        <strong>{{ user_to_delete.first_name }} {{ user_to_delete.last_name }}</strong><br>
+                        Username: @{{ user_to_delete.username }}<br>
+                        Email: {{ user_to_delete.email }}<br>
+                        Member since: {{ user_to_delete.date_joined|date:"F d, Y" }}<br>
+                        Status: {{ user_to_delete.is_active|yesno:"Active,Inactive" }}
+                    </div>
+                </div>
+                
+                <div class="warning-message">
+                    <strong>⚠️ Warning:</strong>
+                    Deleting this user account will permanently remove:
+                    <ul style="margin-top: 0.5rem; margin-left: 1rem;">
+                        <li>All user profile information</li>
+                        <li>User permissions and group memberships</li>
+                        <li>Associated data and relationships</li>
+                        <li>Login access to the system</li>
+                    </ul>
+                </div>
+                
+                <div class="action-buttons">
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            🗑️ Delete User
+                        </button>
+                    </form>
+                    <a href="/user/profile/{{ user_to_delete.id }}/" class="btn btn-secondary">
+                        ❌ Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.querySelector('.confirmation-card');
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9)';
+            
+            setTimeout(() => {
+                card.style.transition = 'all 0.3s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
